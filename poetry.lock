@@ -19,7 +19,7 @@ test = ["pytest (>=6)"]
 
 [[package]]
 name = "hid"
-version = "1.0.5"
+version = "1.0.4"
 description = "ctypes bindings for hidapi"
 category = "main"
 optional = false
@@ -83,7 +83,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "7cf977a8e6f42ea484ac4335657d26552a9f83a0362f598d20d41ccc3cf89e70"
+content-hash = "669997b840665c5481f40a13156631945295ece36cb9a84a7821d03d7134df9d"
 
 [metadata.files]
 colorama = [
@@ -95,8 +95,8 @@ exceptiongroup = [
     {file = "exceptiongroup-1.1.1.tar.gz", hash = "sha256:d484c3090ba2889ae2928419117447a14daf3c1231d5e30d0aae34f354f01785"},
 ]
 hid = [
-    {file = "hid-1.0.5-py2-none-any.whl", hash = "sha256:11836b877e81ab68cdd3abc44f2e230f0e6146c7e17ac45c185b72e0159fc9c7"},
-    {file = "hid-1.0.5.tar.gz", hash = "sha256:1e954e7f7ab9b7c9dfc78db59504692c17db3b71249492b976b1525b97dbb0e8"},
+    {file = "hid-1.0.4-py2-none-any.whl", hash = "sha256:fba9913f07030b01059b822b24c83b370ca3f444e9e6443bd662f9f1aa3f0780"},
+    {file = "hid-1.0.4.tar.gz", hash = "sha256:f61b0382f37a334bc8ba8604bc84b94875ee4f594fbbaf82b2c3b3e827883fc1"},
 ]
 iniconfig = [
     {file = "iniconfig-2.0.0-py3-none-any.whl", hash = "sha256:b6a85871a79d2e3b22d2d1b94ac2824226a63c6b741c88f7ae975f18b6778374"},
