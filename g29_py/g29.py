@@ -18,15 +18,14 @@ class G29:
         # test read
         dat = self.device.read(1024, 100)
         print(dat)
-
-        self.device.write([0xf8, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00])
-        self.device.write([0xf8, 0x09, 0x05, 0x01, 0x01, 0x00, 0x00])
-
-
+    
         # wheel calibration
-        
+        self.device.write(bytes([0xf8, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00]))
+        self.device.write(bytes([0xf8, 0x09, 0x05, 0x01, 0x01, 0x00, 0x00]))
+        time.sleep(5) # wait for calibration
 
     def wheel_init(self):
+        return 0
         
 
 
