@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "g29-py"
+version = "0.1.0"
+description = ""
+authors = ["seanavery <seanpollock3344@gmail.com>"]
+readme = "README.md"
+packages = [{include = "g29_py"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+hid = "^1.0.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
