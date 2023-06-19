@@ -14,6 +14,13 @@ BRAKE_AXIS = 7
 CLUTCH_AXIS = 8
 
 class G29:
+    cache = None
+    state = {
+        "steering": int,
+        "accelerator": int,
+        "brake": int,
+        "clutch": int,
+    }
     def __init__(self):
         device = hid.Device(VENDOR_ID, PRODUCT_ID)
         print(f'Device manufacturer: {device.manufacturer}')
@@ -22,16 +29,16 @@ class G29:
         self.device = device
 
     def connect(self):
-        # test read
-        dat = self.device.read(1024, 100)
-        print(dat)
+        # load cache
+        self.pump()
     
+    # WRITE
+
+    def wheel_calibration(self):
         # wheel calibration
         self.device.write(bytes([0xf8, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00]))
         self.device.write(bytes([0xf8, 0x09, 0x05, 0x01, 0x01, 0x00, 0x00]))
         time.sleep(10) # wait for calibration
-
-    # WRITE
 
     def force_constant(self, val=0.5):
         assert val >= 0 and val <= 1
@@ -101,3 +108,8 @@ class G29:
     def stop_pumping(self):
         if self.thread is not None:
             self.pump_thread.join()
+    
+    def update_state(self, msg):
+        return 0
+        
+        
