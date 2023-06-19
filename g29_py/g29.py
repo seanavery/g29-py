@@ -95,10 +95,13 @@ class G29:
         # get number of bytes in byte_array
         # print("bytes:", byte_array, "len:", len(byte_array))
         if len(byte_array) >= 12:
+            self.update_state(byte_array)
+            self.cache = byte_array
             print("steering?", byte_array[4], byte_array[5])
             print("gas?", byte_array[6])
             print("brake?", byte_array[7])
             print("clutch?", byte_array[8])
+            
         return dat
 
     def start_pumping(self, timeout=10):
@@ -109,7 +112,29 @@ class G29:
         if self.thread is not None:
             self.pump_thread.join()
     
-    def update_state(self, msg):
+    def get_state(self):
+        return self.state
+    
+    def update_state(self, byte_array):
+        if self.cache is None:
+            # update all
+            print("cache not available")
+        else:
+            # update only changed
+            # steering
+            if byte_array[4] != self.cache[4] or byte_array[5] != self.cache[5]:
+                print("update steering")
+                self.state["steering"] = byte_array[4] + byte_array[5] * 256
+            # accelerator
+            if byte_array[6] != self.cache[6]:
+                self.state["accelerator"] = byte_array[6]
+            # brake
+            if byte_array[7] != self.cache[7]:
+                self.state["brake"] = byte_array[7]
+            # clutch
+            if byte_array[8] != self.cache[8]:
+                self.state["clutch"] = byte_array[8]
+            
         return 0
         
         
