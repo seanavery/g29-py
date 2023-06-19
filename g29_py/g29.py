@@ -26,9 +26,10 @@ class G29:
 
     def wheel_init(self):
         return 0
-        
 
-
-        
-    
-        
+    def force_constant(self, val=0.5):
+        # normalze to 0-255
+        val = round(int(val * 255))
+        print("force_constant", val)
+        msg = [0x11, 0x00, val, 0x00, 0x00, 0x00, 0x00]
+        self.device.write(bytes(msg))
