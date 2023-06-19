@@ -29,8 +29,8 @@ class G29:
         self.device = device
 
     def connect(self):
-        # load cache
-        self.pump()
+        self.pump() # load cache
+        # self.wheel_calibration()
     
     # WRITE
 
@@ -97,10 +97,10 @@ class G29:
         if len(byte_array) >= 12:
             self.update_state(byte_array)
             self.cache = byte_array
-            print("steering?", byte_array[4], byte_array[5])
-            print("gas?", byte_array[6])
-            print("brake?", byte_array[7])
-            print("clutch?", byte_array[8])
+            # print("steering?", byte_array[4], byte_array[5])
+            # print("gas?", byte_array[6])
+            # print("brake?", byte_array[7])
+            # print("clutch?", byte_array[8])
             
         return dat
 
@@ -127,8 +127,9 @@ class G29:
             # update only changed
             # steering
             if byte_array[4] != self.cache[4] or byte_array[5] != self.cache[5]:
-                print("update steering")
-                self.state["steering"] = byte_array[4] + byte_array[5] * 256
+                steering_val = self.calc_steering(byte_array[5], byte_array[4])
+                # print("steering_val:", steering_val)
+                self.state["steering"] = steering_val
             # accelerator
             if byte_array[6] != self.cache[6]:
                 self.state["accelerator"] = byte_array[6]
@@ -140,5 +141,15 @@ class G29:
                 self.state["clutch"] = byte_array[8]
             
         return 0
-        
-        
+
+    def calc_steering(self, coarse, fine):
+        # coarse 0-255
+        # fine 0-255
+        # normalize to 0-100
+        coarse = (coarse/256) * (100-(100/256))
+        # normalize to 0-3
+        fine = (fine/256) * (100/256)
+        # print (coarse, fine)
+        # print("update_steering:", coarse, fine)
+        # add together
+        return round(coarse + fine)
