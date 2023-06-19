@@ -30,6 +30,13 @@ class G29:
     def force_constant(self, val=0.5):
         # normalze to 0-255
         val = round(int(val * 255))
-        print("force_constant", val)
+        print("force_constant:", val)
         msg = [0x11, 0x00, val, 0x00, 0x00, 0x00, 0x00]
+        self.device.write(bytes(msg))
+
+    def force_friction(self, val=0.5):
+        # normalze to 0-8
+        val = round(int(val * 8))
+        print("force_friction:", val)
+        msg = [0x21, 0x02, val, 0x00, val, 0x00, 0x00]
         self.device.write(bytes(msg))
