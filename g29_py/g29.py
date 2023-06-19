@@ -105,8 +105,12 @@ class G29:
         return dat
 
     def start_pumping(self, timeout=10):
-        self.pump_thread = threading.Thread(target=self.pump, args=(timeout,))
+        self.pump_thread = threading.Thread(target=self.pump_forever, args=(timeout,))
         self.pump_thread.start()
+
+    def pump_forever(self, timeout=10):
+        while 1:
+            self.pump(timeout)
     
     def stop_pumping(self):
         if self.thread is not None:
