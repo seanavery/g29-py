@@ -6,6 +6,8 @@ GUID = "030000006d0400004fc2000011010000"
 VENDOR_ID = 1133
 PRODUCT_ID = 49743
 
+STEERING_INDEX = 4
+
 class G29:
     def __init__(self):
         device = hid.Device(VENDOR_ID, PRODUCT_ID)
@@ -69,3 +71,19 @@ class G29:
     def autocenter_off(self):
         msg = [0xf5, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
+
+    # TODO
+    def force_off(self):
+        return 0
+
+    def pump(self, timeout=10):
+        dat = self.device.read(16, timeout)
+        byte_array = bytearray(dat)
+        # get number of bytes in byte_array
+        # print("bytes:", byte_array, "len:", len(byte_array))
+        if len(byte_array) >= 12:
+            print("steering?", byte_array[4], byte_array[5])
+            print("gas?", byte_array[6])
+            print("brake?", byte_array[7])
+            print("clutch?", byte_array[8])
+        return dat
