@@ -1,12 +1,17 @@
 import hid
-import time 
+import time
+import threading
 
 NAME = "Logitech G29 Driving Force Racing Wheel"
 GUID = "030000006d0400004fc2000011010000"
 VENDOR_ID = 1133
 PRODUCT_ID = 49743
 
-STEERING_INDEX = 4
+STEERING_COARSE_AXIS = 4
+STEERING_FINE_AXIS = 5
+ACCELERATOR_AXIS = 6
+BRAKE_AXIS = 7
+CLUTCH_AXIS = 8
 
 class G29:
     def __init__(self):
@@ -26,8 +31,7 @@ class G29:
         self.device.write(bytes([0xf8, 0x09, 0x05, 0x01, 0x01, 0x00, 0x00]))
         time.sleep(10) # wait for calibration
 
-    def wheel_init(self):
-        return 0
+    # WRITE
 
     def force_constant(self, val=0.5):
         assert val >= 0 and val <= 1
@@ -76,6 +80,8 @@ class G29:
     def force_off(self):
         return 0
 
+    # READ
+
     def pump(self, timeout=10):
         dat = self.device.read(16, timeout)
         byte_array = bytearray(dat)
@@ -87,3 +93,11 @@ class G29:
             print("brake?", byte_array[7])
             print("clutch?", byte_array[8])
         return dat
+
+    def start_pumping(self, timeout=10):
+        self.pump_thread = threading.Thread(target=self.pump, args=(timeout,))
+        self.pump_thread.start()
+    
+    def stop_pumping(self):
+        if self.thread is not None:
+            self.pump_thread.join()
