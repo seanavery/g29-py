@@ -50,3 +50,18 @@ class G29:
         print('range:', range1, range2)
         msg = [0xf8, 0x81, range1, range2, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
+
+    def set_autocenter(self, strength=0.5, rate=0.05):
+        assert strength >= 0 and strength <= 1
+        assert rate >= 0 and rate <= 1
+        # autocenter up
+        up_msg = [0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+        self.device.write(bytes(up_msg))
+        # normalze strength to 0-15
+        strength = round(int(strength * 15))
+        # normalze rate to 0-255
+        rate = round(int(rate * 255))
+        print('autocenter:', strength, rate)
+        msg = [0xfe, 0x0d, strength, strength, rate, 0x00, 0x00, 0x00]
+        # msg = [0xfe, 0x0d, 0x07, 0x07, 0xff, 0x00, 0x00, 0x00]
+        self.device.write(bytes(msg))
