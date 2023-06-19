@@ -1,7 +1,18 @@
+import time
+
 from g29_py import G29
 
 def test_init_g29():
     g29 = G29()
     # g29.connect()
     # g29.force_constant(0.5)
-    g29.force_friction(0.5)
+    # g29.force_friction(0.5)
+    # g29.set_range(500)
+    # g29.set_autocenter(0.1, 0.2)
+    g29.autocenter_off()
+    
+    # for range 100
+    # for i in range(0, 100):
+    while 1:
+        g29.pump()
+        time.sleep(0.01)
