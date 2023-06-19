@@ -28,6 +28,7 @@ class G29:
         return 0
 
     def force_constant(self, val=0.5):
+        assert val >= 0 and val <= 1
         # normalze to 0-255
         val = round(int(val * 255))
         print("force_constant:", val)
@@ -35,6 +36,7 @@ class G29:
         self.device.write(bytes(msg))
 
     def force_friction(self, val=0.5):
+        assert val >= 0 and val <= 1
         # normalze to 0-8
         val = round(int(val * 8))
         print("force_friction:", val)
