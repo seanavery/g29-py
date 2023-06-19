@@ -40,3 +40,11 @@ class G29:
         print("force_friction:", val)
         msg = [0x21, 0x02, val, 0x00, val, 0x00, 0x00]
         self.device.write(bytes(msg))
+
+    def set_range(self, val=400):
+        assert val >= 400 and val <= 900
+        range1 = val & 0x00ff
+        range2 = (val & 0xff00) >> 8
+        print('range:', range1, range2)
+        msg = [0xf8, 0x81, range1, range2, 0x00, 0x00, 0x00]
+        self.device.write(bytes(msg))
