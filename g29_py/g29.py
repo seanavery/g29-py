@@ -76,31 +76,27 @@ class G29:
         rate = round(int(rate * 255))
         print('autocenter:', strength, rate)
         msg = [0xfe, 0x0d, strength, strength, rate, 0x00, 0x00, 0x00]
-        # msg = [0xfe, 0x0d, 0x07, 0x07, 0xff, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
     def autocenter_off(self):
         msg = [0xf5, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
-    # TODO
-    def force_off(self):
-        return 0
+    # slot 0-4, or 0xf3 for all
+    def force_off(self, slot=0xf3):
+        assert slot >= 0 and slot <= 4 or slot == 0xf3
+        print("force_off:", slot)
+        msg = [slot, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+        self.device.write(bytes(msg))
 
     # READ
 
     def pump(self, timeout=10):
         dat = self.device.read(16, timeout)
         byte_array = bytearray(dat)
-        # get number of bytes in byte_array
-        # print("bytes:", byte_array, "len:", len(byte_array))
         if len(byte_array) >= 12:
             self.update_state(byte_array)
             self.cache = byte_array
-            # print("steering?", byte_array[4], byte_array[5])
-            # print("gas?", byte_array[6])
-            # print("brake?", byte_array[7])
-            # print("clutch?", byte_array[8])
             
         return dat
 
@@ -149,7 +145,5 @@ class G29:
         coarse = (coarse/256) * (100-(100/256))
         # normalize to 0-3
         fine = (fine/256) * (100/256)
-        # print (coarse, fine)
-        # print("update_steering:", coarse, fine)
         # add together
         return round(coarse + fine)
