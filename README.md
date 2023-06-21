@@ -7,13 +7,16 @@
 
 ```
 from g29py import G29
-
 g29 = G29()
+```
 
+```
 # write 
 g29.wheel_cal()
 g29.set_friction(0.5)
+```
 
+```
 #read
 g29.start_pumping() 
 while 1:
@@ -29,3 +32,6 @@ while 1:
 - Interface uses libhidapi ctype bindings from apmorton's [pyhidapi](https://github.com/apmorton/pyhidapi).
 
 
+### support
+
+Only Logitech G29 Driving Force Racing Wheels & Pedals kit supported on linux in ps3 mode.
