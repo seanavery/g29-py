@@ -30,7 +30,7 @@ class G29:
 
     def connect(self):
         self.pump() # load cache
-        # self.wheel_calibration()
+        self.wheel_calibration()
     
     # WRITE
 
