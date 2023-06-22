@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "g29-py"
-version = "0.1.0"
-description = ""
+name = "g29py"
+version = "0.0.1"
+description = "python driver for g29 wheel/pedals"
 authors = ["seanavery <seanpollock3344@gmail.com>"]
 readme = "README.md"
-packages = [{include = "g29_py"}]
+packages = [{include = "g29py"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
