@@ -1,10 +1,6 @@
 # g29py
 > python driver for logitech g29 wheel/pedals
 
-<p align="center">
-  <a href="https://pkg.go.dev/go.viam.com/rdk"><img src="https://pkg.go.dev/badge/go.viam.com/rdk" alt="PkgGoDev"></a>
-</p>
-
 #### install
 `$ pip install g29py`
 
