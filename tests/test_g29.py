@@ -17,7 +17,7 @@ def test_init():
     finally:
         assert g29 is not None
         assert g29.state is not None
-        assert g29.Cache is None
+        assert g29.cache is None
 
 def test_reset():
     g29 = G29()

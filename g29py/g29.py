@@ -1,7 +1,7 @@
 import hid
 import time
 import threading
-import logging
+import logging as log
 
 NAME = "Logitech G29 Driving Force Racing Wheel"
 GUID = "030000006d0400004fc2000011010000"
@@ -27,8 +27,8 @@ class G29:
             device = hid.Device(VENDOR_ID, PRODUCT_ID)
         except:
             raise Exception("Device not found. Is it plugged in?")
-        print(f'Device manufacturer: {device.manufacturer}')
-        print(f'Product: {device.product}')
+        log.debug(f'Device manufacturer: {device.manufacturer}')
+        log.debug(f'Product: {device.product}')
         self.device = device
 
     def connect(self):
@@ -48,7 +48,7 @@ class G29:
             raise ValueError("force_constant val must be between 0 and 1")
         # normalze to 0-255
         val = round(int(val * 255))
-        print("force_constant:", val)
+        log.debug(f'force_constant: {val}')
         msg = [0x11, 0x00, val, 0x00, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
@@ -57,7 +57,7 @@ class G29:
             raise ValueError("force_fricion val must be between 0 and 1")
         # normalze to 0-8
         val = round(int(val * 8))
-        print("force_friction:", val)
+        log.debug(f'force_friction: {val}')
         msg = [0x21, 0x02, val, 0x00, val, 0x00, 0x00]
         self.device.write(bytes(msg))
 
@@ -66,7 +66,7 @@ class G29:
             raise ValueError("set_range val must be between 400 and 900")
         range1 = val & 0x00ff
         range2 = (val & 0xff00) >> 8
-        print('range:', range1, range2)
+        log.debug(f'range: {range1},{range2}')
         msg = [0xf8, 0x81, range1, range2, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
@@ -82,7 +82,7 @@ class G29:
         strength = round(int(strength * 15))
         # normalze rate to 0-255
         rate = round(int(rate * 255))
-        print('autocenter:', strength, rate)
+        log.debug(f'autocenter: {strength} {rate}')
         msg = [0xfe, 0x0d, strength, strength, rate, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
@@ -94,7 +94,7 @@ class G29:
     def force_off(self, slot=0xf3):
         if slot < 0 or slot > 4 and slot !=0xf3:
             raise ValueError("force_off slot must be between 0 and 4 or 0xf3")
-        print("force_off:", slot)
+        log.debug(f'force_off: {slot}')
         msg = [slot, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
@@ -102,6 +102,8 @@ class G29:
 
     def pump(self, timeout=10):
         dat = self.device.read(16, timeout)
+
+        # only handle 12 byte msgs
         byte_array = bytearray(dat)
         if len(byte_array) >= 12:
             self.update_state(byte_array)
@@ -126,26 +128,24 @@ class G29:
     
     def update_state(self, byte_array):
         if self.cache is None:
-            # update all
-            print("cache not available")
-        else:
-            # update only changed
-            # steering
-            if byte_array[4] != self.cache[4] or byte_array[5] != self.cache[5]:
-                steering_val = self.calc_steering(byte_array[5], byte_array[4])
-                # print("steering_val:", steering_val)
-                self.state["steering"] = steering_val
-            # accelerator
-            if byte_array[6] != self.cache[6]:
-                self.state["accelerator"] = byte_array[6]
-            # brake
-            if byte_array[7] != self.cache[7]:
-                self.state["brake"] = byte_array[7]
-            # clutch
-            if byte_array[8] != self.cache[8]:
-                self.state["clutch"] = byte_array[8]
-            
-        return 0
+            log.warn("cache not available")
+            return 
+
+        # update only diffs
+        # steering
+        if byte_array[4] != self.cache[4] or byte_array[5] != self.cache[5]:
+            steering_val = self.calc_steering(byte_array[5], byte_array[4])
+            # print("steering_val:", steering_val)
+            self.state["steering"] = steering_val
+        # accelerator
+        if byte_array[6] != self.cache[6]:
+            self.state["accelerator"] = byte_array[6]
+        # brake
+        if byte_array[7] != self.cache[7]:
+            self.state["brake"] = byte_array[7]
+        # clutch
+        if byte_array[8] != self.cache[8]:
+            self.state["clutch"] = byte_array[8]
 
     def calc_steering(self, coarse, fine):
         # coarse 0-255
