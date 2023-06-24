@@ -1,6 +1,7 @@
 import hid
 import time
 import threading
+import logging
 
 NAME = "Logitech G29 Driving Force Racing Wheel"
 GUID = "030000006d0400004fc2000011010000"
@@ -36,12 +37,15 @@ class G29:
 
     def wheel_calibration(self):
         # wheel calibration
-        self.device.write(bytes([0xf8, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00]))
-        self.device.write(bytes([0xf8, 0x09, 0x05, 0x01, 0x01, 0x00, 0x00]))
+        ret = self.device.write(bytes([0xf8, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00]))
+        if ret != 0:
+            raise Exception("wheel_calibration failed")
+        ret = self.device.write(bytes([0xf8, 0x09, 0x05, 0x01, 0x01, 0x00, 0x00]))
         time.sleep(10) # wait for calibration
 
     def force_constant(self, val=0.5):
-        assert val >= 0 and val <= 1
+        if val < 0 or val > 1:
+            raise ValueError("force_constant val must be between 0 and 1")
         # normalze to 0-255
         val = round(int(val * 255))
         print("force_constant:", val)
@@ -49,7 +53,8 @@ class G29:
         self.device.write(bytes(msg))
 
     def force_friction(self, val=0.5):
-        assert val >= 0 and val <= 1
+        if val < 0 or val > 1:
+            raise ValueError("force_fricion val must be between 0 and 1")
         # normalze to 0-8
         val = round(int(val * 8))
         print("force_friction:", val)
@@ -57,7 +62,8 @@ class G29:
         self.device.write(bytes(msg))
 
     def set_range(self, val=400):
-        assert val >= 400 and val <= 900
+        if val < 400 or val > 900:
+            raise ValueError("set_range val must be between 400 and 900")
         range1 = val & 0x00ff
         range2 = (val & 0xff00) >> 8
         print('range:', range1, range2)
@@ -65,8 +71,10 @@ class G29:
         self.device.write(bytes(msg))
 
     def set_autocenter(self, strength=0.5, rate=0.05):
-        assert strength >= 0 and strength <= 1
-        assert rate >= 0 and rate <= 1
+        if strength < 0 or strength > 1:
+            raise ValueError("force_constant val must be between 0 and 1")
+        if rate < 0 or rate > 1:
+            raise ValueError("force_constant val must be between 0 and 1")
         # autocenter up
         up_msg = [0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         self.device.write(bytes(up_msg))
@@ -84,7 +92,8 @@ class G29:
 
     # slot 0-4, or 0xf3 for all
     def force_off(self, slot=0xf3):
-        assert slot >= 0 and slot <= 4 or slot == 0xf3
+        if slot < 0 or slot > 4 and slot !=0xf3:
+            raise ValueError("force_off slot must be between 0 and 4 or 0xf3")
         print("force_off:", slot)
         msg = [slot, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
