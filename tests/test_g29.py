@@ -29,7 +29,7 @@ def test_reset():
 
 def test_force_off():
     g29 = G29()
-    g29.force_o(ff0xf3)
+    g29.force_off(0xf3)
     assert True # did not throw
 
 def test_force_friction():
