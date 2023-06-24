@@ -7,7 +7,7 @@
 ```
 from g29py import G29
 g29 = G29()
-g29.connect()
+g29.reset() # wheel cal
 ```
 
 ```
@@ -18,7 +18,7 @@ g29.set_friction(0.5)
 
 ```
 #read
-g29.start_pumping() 
+g29.start_pumping() # thread
 while 1:
     state = g29.get_state()
     print("steering:", state["steering"])
