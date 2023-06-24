@@ -23,25 +23,25 @@ class G29:
         "clutch": int,
     }
     def __init__(self):
-        device = hid.Device(VENDOR_ID, PRODUCT_ID)
+        try:
+            device = hid.Device(VENDOR_ID, PRODUCT_ID)
+        except:
+            raise Exception("Device not found. Is it plugged in?")
         print(f'Device manufacturer: {device.manufacturer}')
         print(f'Product: {device.product}')
-        print(f'Serial Number: {device.serial}')
         self.device = device
 
     def connect(self):
         self.pump() # load cache
-        self.wheel_calibration()
-    
-    # WRITE
+        self.reset()
 
-    def wheel_calibration(self):
+    def reset(self):
         # wheel calibration
-        ret = self.device.write(bytes([0xf8, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00]))
-        if ret != 0:
-            raise Exception("wheel_calibration failed")
-        ret = self.device.write(bytes([0xf8, 0x09, 0x05, 0x01, 0x01, 0x00, 0x00]))
+        self.device.write(bytes([0xf8, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00]))
+        self.device.write(bytes([0xf8, 0x09, 0x05, 0x01, 0x01, 0x00, 0x00]))
         time.sleep(10) # wait for calibration
+
+    # WRITE
 
     def force_constant(self, val=0.5):
         if val < 0 or val > 1:
