@@ -1,3 +1,9 @@
+
+"""
+These are sanity checks meant to be checked manually.
+time.sleep() is used to allow the user to see the effects of the commands.  
+"""
+
 import time
 
 from g29py import G29
@@ -13,26 +19,18 @@ def test_init():
         assert g29.state is not None
         assert g29.Cache is None
 
-
 def test_reset():
     g29 = G29()
     assert g29 is not None
     g29.reset()
     assert True # did not throw
 
-# TODO: test_connect
-
 # WRITE
 
 def test_force_off():
     g29 = G29()
-    g29.force_off(0xf3)
+    g29.force_o(ff0xf3)
     assert True # did not throw
-
-# def test_force_constant():
-#     g29 = G29()
-#     # g29.connect()
-#     g29.force_constant(0.7)
 
 def test_force_friction():
     g29 = G29()
@@ -57,6 +55,11 @@ def test_set_autocenter():
     time.sleep(5)
     g29.autocenter_off()
     assert True # did not throw
+
+# def test_force_constant():
+#     g29 = G29()
+#     # g29.connect()
+#     g29.force_constant(0.7)
 
 # READ
 # def test_pump():
