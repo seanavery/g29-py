@@ -2,7 +2,7 @@
 name = "g29py"
 version = "0.0.1"
 description = "python driver for g29 wheel/pedals"
-authors = ["seanavery <seanpollock3344@gmail.com>"]
+authors = ["sean pollock <seanap@protonmail.com>"]
 readme = "README.md"
 packages = [{include = "g29py"}]
 
