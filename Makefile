@@ -9,3 +9,5 @@ signin:
 	poetry config pypi-token.pypi ${PYPI_TOKEN}
 publish:
 	poetry publish
+udev:
+	sudo udevadm control --reload-rules
