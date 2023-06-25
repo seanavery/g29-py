@@ -1,11 +1,21 @@
+name: Build Docker Container
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-focal
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: build
-        run: |
-          docker build -t g29-py -f ../../etc/Dockerfile ./
+      - name: Build Docker container
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: etc/Dockerfile
+          tags: g29-py:latest
