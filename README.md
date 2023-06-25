@@ -2,21 +2,23 @@
 > python driver for logitech g29 wheel/pedals
 
 #### install
-`$ pip install g29py`
-
+```bash
+pip install g29py
 ```
+
+```python
 from g29py import G29
 g29 = G29()
 g29.reset() # wheel cal
 ```
 
-```
+```python
 # write 
 g29.set_range(500)
 g29.set_friction(0.5)
 ```
 
-```
+```python
 #read
 g29.start_pumping() # thread
 while 1:
@@ -27,7 +29,6 @@ while 1:
 
 #### sources
 
-- Write.md Read.md 
 - Commands based on nightmode's [logitech-g29](https://github.com/nightmode/logitech-g29) node.js driver.
 - Interface uses libhidapi ctype bindings from apmorton's [pyhidapi](https://github.com/apmorton/pyhidapi).
 
