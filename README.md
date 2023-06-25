@@ -36,3 +36,11 @@ while 1:
 ### support
 
 Only Logitech G29 Driving Force Racing Wheels & Pedals kit supported on linux in ps3 mode.
+
+On linux, remove sudo requirements by adding udev rule.
+
+```bash
+echo 'KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0664", GROUP="plugdev"' \
+    | sudo tee /etc/udev/rules.d/99-hidraw-permissions.rules
+sudo udevadm control --reload-rules
+```
