@@ -135,7 +135,6 @@ class G29:
         # steering
         if byte_array[4] != self.cache[4] or byte_array[5] != self.cache[5]:
             steering_val = self.calc_steering(byte_array[5], byte_array[4])
-            # print("steering_val:", steering_val)
             self.state["steering"] = steering_val
         # accelerator
         if byte_array[6] != self.cache[6]:
