@@ -52,7 +52,7 @@ class G29:
         msg = [0x11, 0x00, val, 0x00, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
-    def force_friction(self, val=0.5):
+    def set_friction(self, val=0.5):
         if val < 0 or val > 1:
             raise ValueError("force_fricion val must be between 0 and 1")
         # normalze to 0-8
@@ -85,6 +85,24 @@ class G29:
         log.debug(f'autocenter: {strength} {rate}')
         msg = [0xfe, 0x0d, strength, strength, rate, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
+
+    def set_anticenter(self, angle1=180, angle2=180, reverse=0x0, strength=0.05, force=0.5):
+        if angle1 < 0 or angle1 > 255:
+            raise ValueError("angle1 val must be between 0 and 255")
+        if angle2 < 0 or angle2 > 255:
+            raise ValueError("angle2 val must be between 0 and 255")
+        if reverse < 0 or reverse > 1:
+            raise ValueError("reverse val must be between 0 and 1")
+        if strength < 0 or strength > 15:
+            raise ValueError("force_constant val must be between 0 and 1")
+        # normalze strength to 0-15
+        strength = round(int(strength * 15))
+        # normalze force to 0-255
+        force = round(int(force * 255))
+        log.debug(f'anticenter: {angle1} {angle2} {strength} {reverse} {strength}')
+        msg = [0xfe, 0x03, angle1, angle2, strength, reverse, force]
+        self.device.write(bytes(msg))
+        
 
     def autocenter_off(self):
         msg = [0xf5, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
