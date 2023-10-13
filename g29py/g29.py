@@ -13,15 +13,17 @@ STEERING_FINE_AXIS = 5
 ACCELERATOR_AXIS = 6
 BRAKE_AXIS = 7
 CLUTCH_AXIS = 8
+SLOT_RANGE = [0x1, 0xF]
 
 class G29:
     cache = None
     state = {
-        "steering": int,
-        "accelerator": int,
-        "brake": int,
-        "clutch": int,
+        "steering": 50,
+        "accelerator": 255,
+        "clutch": 255,
+        "brake": 255
     }
+
     def __init__(self):
         try:
             device = hid.Device(VENDOR_ID, PRODUCT_ID)
@@ -86,7 +88,7 @@ class G29:
         msg = [0xfe, 0x0d, strength, strength, rate, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
-    def set_anticenter(self, angle1=180, angle2=180, reverse=0x0, strength=0.05, force=0.5):
+    def set_anticenter(self, angle1=180, angle2=180, strength=0.5, reverse=0x0, force=0.5):
         if angle1 < 0 or angle1 > 255:
             raise ValueError("angle1 val must be between 0 and 255")
         if angle2 < 0 or angle2 > 255:
@@ -99,8 +101,8 @@ class G29:
         strength = round(int(strength * 15))
         # normalze force to 0-255
         force = round(int(force * 255))
-        log.debug(f'anticenter: {angle1} {angle2} {strength} {reverse} {strength}')
-        msg = [0xfe, 0x03, angle1, angle2, strength, reverse, force]
+        log.debug(f'anticenter: {angle1} {angle2} {strength} {reverse} {force}')
+        msg = [0x11, 0x03, 0x00, 0x00, 0x00, 0x00, force]
         self.device.write(bytes(msg))
         
 
@@ -165,8 +167,7 @@ class G29:
             self.state["clutch"] = byte_array[8]
 
     def calc_steering(self, coarse, fine):
-        # coarse 0-255
-        # fine 0-255
+        # coarse 0-255        # fine 0-255
         # normalize to 0-100
         coarse = (coarse/256) * (100-(100/256))
         # normalize to 0-3

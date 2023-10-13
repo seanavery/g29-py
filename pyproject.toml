@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "g29py"
-version = "0.0.2"
+version = "0.0.3"
 description = "python driver for g29 wheel/pedals"
 authors = ["sean pollock <seanap@protonmail.com>"]
 readme = "README.md"
