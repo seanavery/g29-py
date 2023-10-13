@@ -27,6 +27,7 @@ while 1:
     state = g29.get_state()
     print("steering:", state["steering"])
     print("brake:", state["brake"])
+    print("accelerator", state["accelerator"])
 ```
 
 #### sources
