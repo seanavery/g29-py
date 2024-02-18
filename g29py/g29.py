@@ -104,7 +104,6 @@ class G29:
         log.debug(f'anticenter: {angle1} {angle2} {strength} {reverse} {force}')
         msg = [0x11, 0x03, 0x00, 0x00, 0x00, 0x00, force]
         self.device.write(bytes(msg))
-        
 
     def autocenter_off(self):
         msg = [0xf5, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
@@ -158,13 +157,13 @@ class G29:
             self.state["steering"] = steering_val
         # accelerator
         if byte_array[6] != self.cache[6]:
-            self.state["accelerator"] = byte_array[6]
+            self.state["accelerator"] = self.calc_pedal(byte_array[6])
         # brake
         if byte_array[7] != self.cache[7]:
-            self.state["brake"] = byte_array[7]
+            self.state["brake"] = self.calc_pedal(byte_array[7])
         # clutch
         if byte_array[8] != self.cache[8]:
-            self.state["clutch"] = byte_array[8]
+            self.state["clutch"] = self.calc_pedal(byte_array[8])
 
     def calc_steering(self, coarse, fine):
         # coarse 0-255
@@ -180,3 +179,10 @@ class G29:
         steering_value = (coarse_normalized + fine_normalized) / 2
 
         return steering_value
+
+    def calc_pedal(self, val):
+        # input 255-0
+        normalized = (255 - val) / 255.0
+
+        # scale to -1 to 1
+        return normalized * 2 - 1
