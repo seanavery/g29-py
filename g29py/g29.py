@@ -167,10 +167,16 @@ class G29:
             self.state["clutch"] = byte_array[8]
 
     def calc_steering(self, coarse, fine):
-        # coarse 0-255        # fine 0-255
-        # normalize to 0-100
-        coarse = (coarse/256) * (100-(100/256))
-        # normalize to 0-3
-        fine = (fine/256) * (100/256)
-        # add together
-        return round(coarse + fine)
+        # coarse 0-255
+        # fine 0-255
+
+        # Normalize coarse to 0-1 then scale to -1 to 1
+        coarse_normalized = (coarse / 255.0) * 2 - 1
+
+        # Normalize fine to 0-1 then scale to -1 to 1
+        fine_normalized = (fine / 255.0) * 2 - 1
+
+        # Averages the normalized values
+        steering_value = (coarse_normalized + fine_normalized) / 2
+
+        return steering_value
