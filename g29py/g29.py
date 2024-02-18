@@ -18,10 +18,10 @@ SLOT_RANGE = [0x1, 0xF]
 class G29:
     cache = None
     state = {
-        "steering": 50,
-        "accelerator": 255,
-        "clutch": 255,
-        "brake": 255
+        "steering": 0.0,
+        "accelerator": -1.0,
+        "clutch": -1.0,
+        "brake": -1.0
     }
 
     def __init__(self):
