@@ -168,17 +168,10 @@ class G29:
     def calc_steering(self, coarse, fine):
         # coarse 0-255
         # fine 0-255
-
-        # Normalize coarse to 0-1 then scale to -1 to 1
+        # TODO: implemeent fine tune
         coarse_normalized = (coarse / 255.0) * 2 - 1
-
-        # Normalize fine to 0-1 then scale to -1 to 1
-        fine_normalized = (fine / 255.0) * 2 - 1
-
-        # Averages the normalized values
-        steering_value = (coarse_normalized + fine_normalized) / 2
-
-        return steering_value
+        
+        return coarse_normalized
 
     def calc_pedal(self, val):
         # input 255-0
