@@ -46,6 +46,14 @@ class G29:
     # WRITE
 
     def force_constant(self, val=0.5):
+        """Sets the force constant of the wheel.
+
+        Args:
+            val (float, optional): Defaults to 0.5.
+
+        Raises:
+            ValueError: force_constant val must be between 0 and 1
+        """
         if val < 0 or val > 1:
             raise ValueError("force_constant val must be between 0 and 1")
         # normalze to 0-255
@@ -55,6 +63,14 @@ class G29:
         self.device.write(bytes(msg))
 
     def set_friction(self, val=0.5):
+        """Sets the friction of the wheel.
+
+        Args:
+            val (float, optional): Defaults to 0.5.
+
+        Raises:
+            ValueError: force_fricion val must be between 0 and 1
+        """
         if val < 0 or val > 1:
             raise ValueError("force_fricion val must be between 0 and 1")
         # normalze to 0-8
@@ -64,6 +80,14 @@ class G29:
         self.device.write(bytes(msg))
 
     def set_range(self, val=400):
+        """Sets the range of the wheel.
+
+        Args:
+            val (int, optional): Defaults to 400.
+
+        Raises:
+            ValueError: set_range val must be between 400 and 900
+        """
         if val < 400 or val > 900:
             raise ValueError("set_range val must be between 400 and 900")
         range1 = val & 0x00ff
@@ -73,10 +97,20 @@ class G29:
         self.device.write(bytes(msg))
 
     def set_autocenter(self, strength=0.5, rate=0.05):
+        """Sets the autocenter of the wheel.
+
+        Args:
+            strength (float, optional): Defaults to 0.5.
+            rate (float, optional): Defaults to 0.05.
+
+        Raises:
+            ValueError: strength val must be between 0 and 1
+            ValueError: rate val must be between 0 and 1
+        """
         if strength < 0 or strength > 1:
-            raise ValueError("force_constant val must be between 0 and 1")
+            raise ValueError("strength val must be between 0 and 1")
         if rate < 0 or rate > 1:
-            raise ValueError("force_constant val must be between 0 and 1")
+            raise ValueError("rate val must be between 0 and 1")
         # autocenter up
         up_msg = [0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         self.device.write(bytes(up_msg))
@@ -89,6 +123,21 @@ class G29:
         self.device.write(bytes(msg))
 
     def set_anticenter(self, angle1=180, angle2=180, strength=0.5, reverse=0x0, force=0.5):
+        """_summary_
+
+        Args:
+            angle1 (int, optional): Defaults to 180.
+            angle2 (int, optional): Defaults to 180.
+            strength (float, optional): Defaults to 0.5.
+            reverse (hexadecimal, optional): Defaults to 0x0.
+            force (float, optional): _description_to 0.5.
+
+        Raises:
+            ValueError: angle1 val must be between 0 and 255
+            ValueError: angle2 val must be between 0 and 255
+            ValueError: reverse val must be between 0 and 1
+            ValueError: force_constant val must be between 0 and 1
+        """
         if angle1 < 0 or angle1 > 255:
             raise ValueError("angle1 val must be between 0 and 255")
         if angle2 < 0 or angle2 > 255:
@@ -106,11 +155,20 @@ class G29:
         self.device.write(bytes(msg))
 
     def autocenter_off(self):
+        """Turns off autocentering"""
         msg = [0xf5, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
     # slot 0-4, or 0xf3 for all
     def force_off(self, slot=0xf3):
+        """_summary_
+
+        Args:
+            slot (hexadecimal, optional): Defaults to 0xf3.
+
+        Raises:
+            ValueError: slot must be between 0 and 4 or 0xf3
+        """
         if slot < 0 or slot > 4 and slot !=0xf3:
             raise ValueError("force_off slot must be between 0 and 4 or 0xf3")
         log.debug(f'force_off: {slot}')
