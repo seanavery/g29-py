@@ -3,10 +3,12 @@
 
 ![](etc/g29py.jpg)
 
-#### install
+## install
 ```bash
 pip install g29py
 ```
+
+## use
 
 ```python
 from g29py import G29
@@ -21,7 +23,7 @@ g29.set_friction(0.5)
 ```
 
 ```python
-#read
+# read
 g29.start_pumping() # thread
 while 1:
     state = g29.get_state()
@@ -30,13 +32,13 @@ while 1:
     print("accelerator", state["accelerator"])
 ```
 
-#### sources
+## sources
 
 - Commands based on nightmode's [logitech-g29](https://github.com/nightmode/logitech-g29) node.js driver.
 - Interface uses libhidapi ctype bindings from apmorton's [pyhidapi](https://github.com/apmorton/pyhidapi).
 
 
-### support
+## support
 
 Only Logitech G29 Driving Force Racing Wheels & Pedals kit supported on linux in ps3 mode.
 
