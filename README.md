@@ -32,6 +32,15 @@ while 1:
     print("accelerator", state["accelerator"])
 ```
 
+## read
+
+| Key           | Description                         | Value Range      | Neutral Position |
+|---------------|-------------------------------------|------------------|------------------|
+| `steering`    | Steering wheel position.            | Float: -1 to 1   | 0 (Centered)     |
+| `accelerator` | Accelerator pedal position.         | Float: -1 to 1   | -1 (Not pressed) |
+| `clutch`      | Clutch pedal position.              | Float: -1 to 1   | -1 (Not pressed) |
+| `brake`       | Brake pedal position.               | Float: -1 to 1   | -1 (Not pressed) |
+
 ## sources
 
 - Commands based on nightmode's [logitech-g29](https://github.com/nightmode/logitech-g29) node.js driver.
