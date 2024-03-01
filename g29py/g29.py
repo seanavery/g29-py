@@ -230,7 +230,10 @@ class G29:
         if byte_array[BUTTON_MISC] != self.cache[BUTTON_MISC]:
             self.update_misc(byte_array[BUTTON_MISC])
         if byte_array[BUTTON_PLUS] != self.cache[BUTTON_PLUS]:
-            print("byte_array[2] != self.cache[2]", byte_array[2])
+            if byte_array[BUTTON_PLUS] == BUTTON_PLUS_ON:
+                self.state["buttons"]["+"] = 1
+            else:
+                self.state["buttons"]["+"] = 0
         if byte_array[BUTTON_MISC2] != self.cache[BUTTON_MISC2]:
             self.update_misc2(byte_array[BUTTON_MISC2])
         if byte_array[STEERING_COARSE] != self.cache[STEERING_COARSE] or byte_array[STEERING_FINE] != self.cache[STEERING_FINE]:
