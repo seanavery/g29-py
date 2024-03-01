@@ -22,12 +22,14 @@ class G29:
                 "S": 0,
                 "T": 0
             },
-            "R2": 0,
-            "R3": 0,
-            "L2": 0,
-            "L3": 0,
-            "Share": 0,
-            "Options": 0,
+            "misc": {
+                "R2": 0,
+                "R3": 0,
+                "L2": 0,
+                "L3": 0,
+                "Share": 0,
+                "Options": 0,
+            },
             "PS": 0,
             "+": 0,
             "-": 0,
@@ -224,7 +226,7 @@ class G29:
         if byte_array[GAME_PAD] != self.cache[GAME_PAD]:
             self.update_gamepad(byte_array[GAME_PAD])
         if byte_array[BUTTON_MISC] != self.cache[BUTTON_MISC]:
-            print("byte_array[1] != self.cache[1]", byte_array[1])
+            self.update_misc(byte_array[BUTTON_MISC])
         if byte_array[BUTTON_PLUS] != self.cache[BUTTON_PLUS]:
             print("byte_array[2] != self.cache[2]", byte_array[2])
         if byte_array[BUTTON_MISC2] != self.cache[BUTTON_MISC2]:
@@ -274,3 +276,20 @@ class G29:
             self.state["buttons"]["gamepad"]["O"] = 1
         if val == GAME_PAD_TRIANGLE:
             self.state["buttons"]["gamepad"]["T"] = 1
+            
+    def update_misc(self, val):
+        if val == MISC_NIL:
+            for k in self.state["buttons"]["misc"]:
+                self.state["buttons"]["misc"][k] = 0
+        if val == MISC_R2:
+            self.state["buttons"]["misc"]["R2"] = 1
+        if val == MISC_R3:
+            self.state["buttons"]["misc"]["R3"] = 1
+        if val == MISC_L2:
+            self.state["buttons"]["misc"]["L2"] = 1
+        if val == MISC_L3:
+            self.state["buttons"]["misc"]["L3"] = 1
+        if val == MISC_SHARE:
+            self.state["buttons"]["misc"]["Share"] = 1
+        if val == MISC_OPTIONS:
+            self.state["buttons"]["misc"]["Options"] = 1
