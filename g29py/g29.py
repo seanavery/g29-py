@@ -12,13 +12,11 @@ class G29:
         "clutch": -1.0,
         "brake": -1.0,
         "buttons": {
-            "arrow_pad": {
+            "gamepad": {
                 "up": 0,
                 "down": 0,
                 "left": 0,
-                "right": 0
-            },
-            "button_pad": {
+                "right": 0,
                 "X": 0,
                 "O": 0,
                 "S": 0,
@@ -224,7 +222,7 @@ class G29:
        
         # update only diffs
         if byte_array[GAME_PAD] != self.cache[GAME_PAD]:
-            print("byte_array[0] != self.cache[0]", byte_array[0])
+            self.update_gamepad(byte_array[GAME_PAD])
         if byte_array[BUTTON_MISC] != self.cache[BUTTON_MISC]:
             print("byte_array[1] != self.cache[1]", byte_array[1])
         if byte_array[BUTTON_PLUS] != self.cache[BUTTON_PLUS]:
@@ -255,3 +253,24 @@ class G29:
 
         # scale to -1 to 1
         return normalized * 2 - 1
+    
+    def update_gamepad(self, val):
+        if val == GAME_PAD_NIL:
+            for k in self.state["buttons"]["gamepad"]:
+                self.state["buttons"]["gamepad"][k] = 0
+        if val == GAME_PAD_UP:
+            self.state["buttons"]["gamepad"]["up"] = 1
+        if val == GAME_PAD_DOWN:
+            self.state["buttons"]["gamepad"]["down"] = 1
+        if val == GAME_PAD_RIGHT:
+            self.state["buttons"]["gamepad"]["right"] = 1
+        if val == GAME_PAD_LEFT:
+            self.state["buttons"]["gamepad"]["left"] = 1
+        if val == GAME_PAD_X:
+            self.state["buttons"]["gamepad"]["X"] = 1
+        if val == GAME_PAD_SQUARE:
+            self.state["buttons"]["gamepad"]["S"] = 1
+        if val == GAME_PAD_CIRCLE:
+            self.state["buttons"]["gamepad"]["O"] = 1
+        if val == GAME_PAD_TRIANGLE:
+            self.state["buttons"]["gamepad"]["T"] = 1
