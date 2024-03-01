@@ -2,18 +2,7 @@ import hid
 import time
 import threading
 import logging as log
-
-NAME = "Logitech G29 Driving Force Racing Wheel"
-GUID = "030000006d0400004fc2000011010000"
-VENDOR_ID = 1133
-PRODUCT_ID = 49743
-
-STEERING_COARSE_AXIS = 4
-STEERING_FINE_AXIS = 5
-ACCELERATOR_AXIS = 6
-BRAKE_AXIS = 7
-CLUTCH_AXIS = 8
-SLOT_RANGE = [0x1, 0xF]
+from .params import *
 
 class G29:
     cache = None
@@ -207,20 +196,34 @@ class G29:
         if self.cache is None:
             log.warn("cache not available")
             return 
+        
+        # arrow pad 
+        # button pad
+        if byte_array[0] != self.cache[0]:
+            print("byte_array[0] != self.cache[0]", byte_array[0])
+        # R2, R3, L2, L3, Share, Options, PS
+        if byte_array[1] != self.cache[1]:
+            log.warn("byte_array[1] != self.cache[1]")
+        # +
+        if byte_array[2] != self.cache[2]:
+            log.warn("byte_array[2] != self.cache[2]")
+        # -, back button, wheel button
+        if byte_array[3] != self.cache[3]:
+            log.warn("byte_array[3] != self.cache[3]")
 
         # update only diffs
         # steering
-        if byte_array[4] != self.cache[4] or byte_array[5] != self.cache[5]:
-            steering_val = self.calc_steering(byte_array[5], byte_array[4])
+        if byte_array[STEERING_COARSE] != self.cache[STEERING_COARSE] or byte_array[STEERING_FINE] != self.cache[STEERING_FINE]:
+            steering_val = self.calc_steering(byte_array[STEERING_FINE], byte_array[STEERING_COARSE])
             self.state["steering"] = steering_val
         # accelerator
-        if byte_array[6] != self.cache[6]:
-            self.state["accelerator"] = self.calc_pedal(byte_array[6])
+        if byte_array[PEDAL_ACCELERATOR] != self.cache[PEDAL_ACCELERATOR]:
+            self.state["accelerator"] = self.calc_pedal(byte_array[PEDAL_ACCELERATOR])
         # brake
-        if byte_array[7] != self.cache[7]:
+        if byte_array[PEDAL_BRAKE] != self.cache[PEDAL_BRAKE]:
             self.state["brake"] = self.calc_pedal(byte_array[7])
         # clutch
-        if byte_array[8] != self.cache[8]:
+        if byte_array[PEDAL_CLUTCH] != self.cache[PEDAL_CLUTCH]:
             self.state["clutch"] = self.calc_pedal(byte_array[8])
 
     def calc_steering(self, coarse, fine):
