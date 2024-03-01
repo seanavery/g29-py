@@ -10,7 +10,32 @@ class G29:
         "steering": 0.0,
         "accelerator": -1.0,
         "clutch": -1.0,
-        "brake": -1.0
+        "brake": -1.0,
+        "buttons": {
+            "arrow_pad": {
+                "up": 0,
+                "down": 0,
+                "left": 0,
+                "right": 0
+            },
+            "button_pad": {
+                "X": 0,
+                "O": 0,
+                "S": 0,
+                "T": 0
+            },
+            "R2": 0,
+            "R3": 0,
+            "L2": 0,
+            "L3": 0,
+            "Share": 0,
+            "Options": 0,
+            "PS": 0,
+            "+": 0,
+            "-": 0,
+            "back": 0,
+            "track": 0
+        }
     }
 
     def __init__(self):
@@ -196,33 +221,23 @@ class G29:
         if self.cache is None:
             log.warn("cache not available")
             return 
-        
-        # arrow pad 
-        # button pad
-        if byte_array[0] != self.cache[0]:
-            print("byte_array[0] != self.cache[0]", byte_array[0])
-        # R2, R3, L2, L3, Share, Options, PS
-        if byte_array[1] != self.cache[1]:
-            log.warn("byte_array[1] != self.cache[1]")
-        # +
-        if byte_array[2] != self.cache[2]:
-            log.warn("byte_array[2] != self.cache[2]")
-        # -, back button, wheel button
-        if byte_array[3] != self.cache[3]:
-            log.warn("byte_array[3] != self.cache[3]")
-
+       
         # update only diffs
-        # steering
+        if byte_array[GAME_PAD] != self.cache[GAME_PAD]:
+            print("byte_array[0] != self.cache[0]", byte_array[0])
+        if byte_array[BUTTON_MISC] != self.cache[BUTTON_MISC]:
+            print("byte_array[1] != self.cache[1]", byte_array[1])
+        if byte_array[BUTTON_PLUS] != self.cache[BUTTON_PLUS]:
+            print("byte_array[2] != self.cache[2]", byte_array[2])
+        if byte_array[BUTTON_MISC2] != self.cache[BUTTON_MISC2]:
+            print("byte_array[3] != self.cache[3]", byte_array[3])
         if byte_array[STEERING_COARSE] != self.cache[STEERING_COARSE] or byte_array[STEERING_FINE] != self.cache[STEERING_FINE]:
             steering_val = self.calc_steering(byte_array[STEERING_FINE], byte_array[STEERING_COARSE])
             self.state["steering"] = steering_val
-        # accelerator
         if byte_array[PEDAL_ACCELERATOR] != self.cache[PEDAL_ACCELERATOR]:
             self.state["accelerator"] = self.calc_pedal(byte_array[PEDAL_ACCELERATOR])
-        # brake
         if byte_array[PEDAL_BRAKE] != self.cache[PEDAL_BRAKE]:
             self.state["brake"] = self.calc_pedal(byte_array[7])
-        # clutch
         if byte_array[PEDAL_CLUTCH] != self.cache[PEDAL_CLUTCH]:
             self.state["clutch"] = self.calc_pedal(byte_array[8])
 
