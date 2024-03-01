@@ -30,11 +30,13 @@ class G29:
                 "Share": 0,
                 "Options": 0,
             },
-            "PS": 0,
             "+": 0,
-            "-": 0,
-            "back": 0,
-            "track": 0
+            "misc2": {
+                "-": 0,
+                "track": 0,
+                "back": 0,
+                "PS": 0,
+            },
         }
     }
 
@@ -230,7 +232,7 @@ class G29:
         if byte_array[BUTTON_PLUS] != self.cache[BUTTON_PLUS]:
             print("byte_array[2] != self.cache[2]", byte_array[2])
         if byte_array[BUTTON_MISC2] != self.cache[BUTTON_MISC2]:
-            print("byte_array[3] != self.cache[3]", byte_array[3])
+            self.update_misc2(byte_array[BUTTON_MISC2])
         if byte_array[STEERING_COARSE] != self.cache[STEERING_COARSE] or byte_array[STEERING_FINE] != self.cache[STEERING_FINE]:
             steering_val = self.calc_steering(byte_array[STEERING_FINE], byte_array[STEERING_COARSE])
             self.state["steering"] = steering_val
@@ -293,3 +295,20 @@ class G29:
             self.state["buttons"]["misc"]["Share"] = 1
         if val == MISC_OPTIONS:
             self.state["buttons"]["misc"]["Options"] = 1
+
+    def update_misc2(self, val):
+        # handle nil case
+        if val == MISC2_NIL:
+            for k in self.state["buttons"]["misc2"]:
+                self.state["buttons"]["misc2"][k] = 0
+        if val == MISC2_MINUS:
+            self.state["buttons"]["misc2"]["-"] = 1
+        if val == MISC2_TRACK_RIGHT:
+            self.state["buttons"]["misc2"]["track"] = 1
+        if val == MISC2_TRACK_LEFT:
+            self.state["buttons"]["misc2"]["track"] = -1
+        if val == MISC2_BACK:
+            self.state["buttons"]["misc2"]["back"] = 1
+        if val == MISC_PSTATION:
+            self.state["buttons"]["PS"] = 1
+            
