@@ -1,6 +1,8 @@
 # g29py
 > python driver for logitech g29 wheel/pedals
 
+> :warning: **Warning**: g29py is alpha software. This repository is under heavy developement and subject to breaking changes. :warning:
+
 ![](etc/g29py.jpg)
 
 ## install
