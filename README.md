@@ -84,6 +84,7 @@ while 1:
 
 - Commands based on nightmode's [logitech-g29](https://github.com/nightmode/logitech-g29) node.js driver.
 - Interface uses libhidapi ctype bindings from apmorton's [pyhidapi](https://github.com/apmorton/pyhidapi).
+- Reference [wiki-brew](https://wiibrew.org/wiki/Logitech_USB_steering_wheel) for effects API.
 
 ## Support
 
