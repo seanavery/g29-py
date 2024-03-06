@@ -70,6 +70,21 @@ while 1:
 | Back    | 0/1   |
 | PS      | 0/1   |
 
+
+## Write
+
+| Method Name       | Default Parameters                         | Parameter Types                  |
+|-------------------|--------------------------------------------|----------------------------------|
+| `force_constant`  | `val=0.5`                                  | `val`: float                     |
+| `set_friction`    | `val=0.5`                                  | `val`: float                     |
+| `set_range`       | `val=400`                                  | `val`: int                       |
+| `set_autocenter`  | `strength=0.5, rate=0.05`                  | `strength`: float, `rate`: float |
+| `set_anticenter`  | `angle1=180, angle2=180, strength=0.5, reverse=0x0, force=0.5` | `angle1`: int, `angle2`: int, `strength`: float, `reverse`: hexadecimal, `force`: float |
+| `autocenter_off`  | None                                       | None                             |
+| `force_off`       | `slot=0xf3`                                | `slot`: hexadecimal              |
+
+
+
 ## Sources
 
 - Commands based on nightmode's [logitech-g29](https://github.com/nightmode/logitech-g29) node.js driver.
