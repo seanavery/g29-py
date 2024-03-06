@@ -38,13 +38,12 @@ while 1:
 
 ### Pedals/Steering
 
-| Pedal       | Value Range      | Neutral Position |
-|-------------|------------------|------------------|
-| steering    | Float: -1 to 1   | 0 (Centered)     |
-| accelerator | Float: -1 to 1   | -1 (Not pressed) |
-| clutch      | Float: -1 to 1   | -1 (Not pressed) |
-| brake       | Float: -1 to 1   | -1 (Not pressed) |
-
+| Pedal         | Value Range      | Neutral Position |
+|---------------|------------------|------------------|
+| `steering`    | Float: -1 to 1   | 0 (Centered)     |
+| `accelerator` | Float: -1 to 1   | -1 (Not pressed) |
+| `clutch`      | Float: -1 to 1   | -1 (Not pressed) |
+| `brake`       | Float: -1 to 1   | -1 (Not pressed) |
 
 ### Buttons
 
