@@ -49,15 +49,12 @@ class G29:
         log.debug(f'Product: {device.product}')
         self.device = device
 
-    def connect(self):
-        self.pump() # load cache
-        self.reset()
-
+    # TODO(seanp): Why is reset not working?
     def reset(self):
         # wheel calibration
         self.device.write(bytes([0xf8, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00]))
         self.device.write(bytes([0xf8, 0x09, 0x05, 0x01, 0x01, 0x00, 0x00]))
-        time.sleep(10) # wait for calibration
+        time.sleep(5) # wait for calibration
 
     # WRITE
 

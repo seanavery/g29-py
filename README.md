@@ -35,7 +35,6 @@ while 1:
 
 ## Read
 
-
 ### Pedals/Steering
 
 | Pedal         | Value Range      | Neutral Position |
@@ -69,7 +68,6 @@ while 1:
 | `back`  | 0/1   |
 | `PS`    | 0/1   |
 
-
 ## Write
 
 | Method Name       | Default Parameters                         | Parameter Types                  |
@@ -82,13 +80,10 @@ while 1:
 | `autocenter_off`  | None                                       | None                             |
 | `force_off`       | `slot=0xf3`                                | `slot`: hexadecimal              |
 
-
-
 ## Sources
 
 - Commands based on nightmode's [logitech-g29](https://github.com/nightmode/logitech-g29) node.js driver.
 - Interface uses libhidapi ctype bindings from apmorton's [pyhidapi](https://github.com/apmorton/pyhidapi).
-
 
 ## Support
 
