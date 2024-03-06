@@ -5,17 +5,16 @@
 
 ![](etc/g29py.jpg)
 
-## install
+## Install
 ```bash
 pip install g29py
 ```
 
-## use
+## Use
 
 ```python
 from g29py import G29
 g29 = G29()
-g29.reset() # wheel cal
 ```
 
 ```python
@@ -34,22 +33,50 @@ while 1:
     print("accelerator", state["accelerator"])
 ```
 
-## read
+## Read
+
+
+### Pedals/Steering
 
 | Key           | Description                         | Value Range      | Neutral Position |
 |---------------|-------------------------------------|------------------|------------------|
-| `steering`    | Steering wheel position.            | Float: -1 to 1   | 0 (Centered)     |
-| `accelerator` | Accelerator pedal position.         | Float: -1 to 1   | -1 (Not pressed) |
-| `clutch`      | Clutch pedal position.              | Float: -1 to 1   | -1 (Not pressed) |
-| `brake`       | Brake pedal position.               | Float: -1 to 1   | -1 (Not pressed) |
+| steering    | Steering wheel position.            | Float: -1 to 1   | 0 (Centered)     |
+| accelerator | Accelerator pedal position.         | Float: -1 to 1   | -1 (Not pressed) |
+| clutch      | Clutch pedal position.              | Float: -1 to 1   | -1 (Not pressed) |
+| brake       | Brake pedal position.               | Float: -1 to 1   | -1 (Not pressed) |
 
-## sources
+
+### Buttons
+
+| Button  | Value |
+|---------|-------|
+| Up      | 0/1   |
+| Down    | 0/1   |
+| Left    | 0/1   |
+| Right   | 0/1   |
+| X       | 0/1   |
+| O       | 0/1   |
+| S       | 0/1   |
+| T       | 0/1   |
+| R2      | 0/1   |
+| R3      | 0/1   |
+| L2      | 0/1   |
+| L3      | 0/1   |
+| Share   | 0/1   |
+| Options | 0/1   |
+| +       | 0/1   |
+| -       | 0/1   |
+| Track   | -1/1  |
+| Back    | 0/1   |
+| PS      | 0/1   |
+
+## Sources
 
 - Commands based on nightmode's [logitech-g29](https://github.com/nightmode/logitech-g29) node.js driver.
 - Interface uses libhidapi ctype bindings from apmorton's [pyhidapi](https://github.com/apmorton/pyhidapi).
 
 
-## support
+## Support
 
 Only Logitech G29 Driving Force Racing Wheels & Pedals kit supported on linux in ps3 mode.
 
