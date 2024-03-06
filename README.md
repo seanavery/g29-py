@@ -38,37 +38,37 @@ while 1:
 
 ### Pedals/Steering
 
-| Key           | Description                         | Value Range      | Neutral Position |
-|---------------|-------------------------------------|------------------|------------------|
-| steering    | Steering wheel position.            | Float: -1 to 1   | 0 (Centered)     |
-| accelerator | Accelerator pedal position.         | Float: -1 to 1   | -1 (Not pressed) |
-| clutch      | Clutch pedal position.              | Float: -1 to 1   | -1 (Not pressed) |
-| brake       | Brake pedal position.               | Float: -1 to 1   | -1 (Not pressed) |
+| Pedal       | Value Range      | Neutral Position |
+|-------------|------------------|------------------|
+| steering    | Float: -1 to 1   | 0 (Centered)     |
+| accelerator | Float: -1 to 1   | -1 (Not pressed) |
+| clutch      | Float: -1 to 1   | -1 (Not pressed) |
+| brake       | Float: -1 to 1   | -1 (Not pressed) |
 
 
 ### Buttons
 
 | Button  | Value |
 |---------|-------|
-| Up      | 0/1   |
-| Down    | 0/1   |
-| Left    | 0/1   |
-| Right   | 0/1   |
-| X       | 0/1   |
-| O       | 0/1   |
-| S       | 0/1   |
-| T       | 0/1   |
-| R2      | 0/1   |
-| R3      | 0/1   |
-| L2      | 0/1   |
-| L3      | 0/1   |
-| Share   | 0/1   |
-| Options | 0/1   |
-| +       | 0/1   |
-| -       | 0/1   |
-| Track   | -1/1  |
-| Back    | 0/1   |
-| PS      | 0/1   |
+| `up`    | 0/1   |
+| `down`  | 0/1   |
+| `left`  | 0/1   |
+| `right` | 0/1   |
+| `X`     | 0/1   |
+| `O`     | 0/1   |
+| `S`     | 0/1   |
+| `T`     | 0/1   |
+| `R2`    | 0/1   |
+| `R3`    | 0/1   |
+| `L2`    | 0/1   |
+| `L3`    | 0/1   |
+| `Share` | 0/1   |
+| `Options` | 0/1 |
+| `+`     | 0/1   |
+| `-`     | 0/1   |
+| `track` | -1/1  |
+| `back`  | 0/1   |
+| `PS`    | 0/1   |
 
 
 ## Write
