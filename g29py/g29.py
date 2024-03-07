@@ -34,12 +34,14 @@ class G29:
             "misc2": {
                 "-": 0,
                 "track": 0,
-                "back": 0,
+                "dial": DIAL_CENTER, # -100 to 100
                 "PS": 0,
             },
         }
     }
-
+    dial_val = DIAL_CENTER
+    
+    # Add dial 
     def __init__(self):
         try:
             device = hid.Device(VENDOR_ID, PRODUCT_ID)
@@ -260,6 +262,7 @@ class G29:
     
     def update_gamepad(self, val):
         if val == GAME_PAD_NIL:
+            print("reseting gamepad")
             for k in self.state["buttons"]["gamepad"]:
                 self.state["buttons"]["gamepad"][k] = 0
         if val == GAME_PAD_UP:
@@ -271,6 +274,7 @@ class G29:
         if val == GAME_PAD_LEFT:
             self.state["buttons"]["gamepad"]["left"] = 1
         if val == GAME_PAD_X:
+            print("X")
             self.state["buttons"]["gamepad"]["X"] = 1
         if val == GAME_PAD_SQUARE:
             self.state["buttons"]["gamepad"]["S"] = 1
@@ -300,15 +304,27 @@ class G29:
         # handle nil case
         if val == MISC2_NIL:
             for k in self.state["buttons"]["misc2"]:
-                self.state["buttons"]["misc2"][k] = 0
+                if k != "dial":
+                    self.state["buttons"]["misc2"][k] = 0
         if val == MISC2_MINUS:
             self.state["buttons"]["misc2"]["-"] = 1
         if val == MISC2_TRACK_RIGHT:
-            self.state["buttons"]["misc2"]["track"] = 1
+            self.state["buttons"]["misc2"]["dial"] = self.update_dial(1)
         if val == MISC2_TRACK_LEFT:
-            self.state["buttons"]["misc2"]["track"] = -1
+            self.state["buttons"]["misc2"]["dial"] = self.update_dial(-1)
         if val == MISC2_BACK:
             self.state["buttons"]["misc2"]["back"] = 1
         if val == MISC_PSTATION:
-            self.state["buttons"]["PS"] = 1
+            print("ps")
+            self.state["buttons"]["misc2"]["PS"] = 1
+    
+    def update_dial(self, val):
+        pos = self.dial_val + val
+        # check pos is in range
+        if pos > DIAL_CENTER + DIAL_RANGE / 2:
+            pos = DIAL_CENTER + DIAL_RANGE / 2
+        if pos < DIAL_CENTER - DIAL_RANGE / 2:
+            pos = DIAL_CENTER - DIAL_RANGE / 2
+        self.dial_val = pos
+        return pos
             
