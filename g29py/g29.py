@@ -5,6 +5,7 @@ import logging as log
 from .params import *
 
 class G29:
+    connected = False
     cache = None
     state = {
         "steering": 0.0,
@@ -50,6 +51,7 @@ class G29:
         log.debug(f'Device manufacturer: {device.manufacturer}')
         log.debug(f'Product: {device.product}')
         self.device = device
+        self.connected = True
 
     # TODO(seanp): Why is reset not working?
     def reset(self):
@@ -193,7 +195,13 @@ class G29:
     # READ
 
     def pump(self, timeout=10):
-        dat = self.device.read(16, timeout)
+        try:
+            dat = self.device.read(16, timeout)
+        except Exception as e:
+            print(f"G29 disconneted: {e}")
+            self.connected = False
+            self.stop_pumping()
+            return
 
         # only handle 12 byte msgs
         byte_array = bytearray(dat)
@@ -208,14 +216,16 @@ class G29:
         self.pump_thread.start()
 
     def pump_forever(self, timeout=10):
-        while 1:
+        while self.connected:
             self.pump(timeout)
     
     def stop_pumping(self):
-        if self.thread is not None:
+        if self.pump_thread is not None:
             self.pump_thread.join()
     
     def get_state(self):
+        if not self.connected:
+            raise Exception("G29 not connected")
         return self.state
     
     def update_state(self, byte_array):
