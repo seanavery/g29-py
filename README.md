@@ -25,7 +25,7 @@ g29.set_friction(0.5)
 
 ```python
 # read
-g29.start_pumping() # thread
+g29.listen() # thread
 while 1:
     state = g29.get_state()
     print("steering:", state["steering"])
