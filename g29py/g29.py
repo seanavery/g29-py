@@ -194,7 +194,7 @@ class G29:
 
     # READ
 
-    def pump(self, timeout=10):
+    def read(self, timeout=10):
         try:
             dat = self.device.read(16, timeout)
         except Exception as e:
@@ -211,13 +211,14 @@ class G29:
             
         return dat
 
-    def start_pumping(self, timeout=10):
-        self.pump_thread = threading.Thread(target=self.pump_forever, args=(timeout,))
+    def listen(self, timeout=10):
+        self.pump_thread = threading.Thread(target=self.pump, args=(timeout,))
         self.pump_thread.start()
 
-    def pump_forever(self, timeout=10):
+    def pump(self, timeout=10):
         while self.connected:
-            self.pump(timeout)
+            time.sleep(0.01) # 100 hz
+            self.read(timeout)
     
     def stop_pumping(self):
         if self.pump_thread is not None:
