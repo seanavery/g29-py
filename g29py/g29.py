@@ -41,8 +41,8 @@ class G29:
         }
     }
     dial_val = DIAL_CENTER
-    
-    # Add dial 
+
+    # Add dial
     def __init__(self):
         try:
             device = hid.Device(VENDOR_ID, PRODUCT_ID)
@@ -208,7 +208,6 @@ class G29:
         if len(byte_array) >= 12:
             self.update_state(byte_array)
             self.cache = byte_array
-            
         return dat
 
     def listen(self, timeout=10):
@@ -218,21 +217,21 @@ class G29:
     def pump(self, timeout=10):
         while self.connected:
             self.read(timeout)
-    
+
     def stop_pumping(self):
         if self.pump_thread is not None:
             self.pump_thread.join()
-    
+
     def get_state(self):
         if not self.connected:
             raise Exception("G29 not connected")
         return self.state
-    
+
     def update_state(self, byte_array):
         if self.cache is None:
             log.warn("cache not available")
-            return 
-       
+            return
+
         # update only diffs
         if byte_array[GAME_PAD] != self.cache[GAME_PAD]:
             self.update_gamepad(byte_array[GAME_PAD])
@@ -260,7 +259,7 @@ class G29:
         # fine 0-255
         # TODO: implemeent fine tune
         coarse_normalized = (coarse / 255.0) * 2 - 1
-        
+
         return coarse_normalized
 
     def calc_pedal(self, val):
@@ -269,7 +268,7 @@ class G29:
 
         # scale to -1 to 1
         return normalized * 2 - 1
-    
+
     def update_gamepad(self, val):
         if val == GAME_PAD_NIL:
             print("reseting gamepad")
@@ -292,7 +291,7 @@ class G29:
             self.state["buttons"]["gamepad"]["O"] = 1
         if val == GAME_PAD_TRIANGLE:
             self.state["buttons"]["gamepad"]["T"] = 1
-            
+
     def update_misc(self, val):
         if val == MISC_NIL:
             for k in self.state["buttons"]["misc"]:
@@ -327,7 +326,7 @@ class G29:
         if val == MISC_PSTATION:
             print("ps")
             self.state["buttons"]["misc2"]["PS"] = 1
-    
+
     def update_dial(self, val):
         pos = self.dial_val + val
         # check pos is in range
@@ -337,4 +336,3 @@ class G29:
             pos = DIAL_CENTER - DIAL_RANGE / 2
         self.dial_val = pos
         return pos
-            
