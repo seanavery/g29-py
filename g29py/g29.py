@@ -217,7 +217,6 @@ class G29:
 
     def pump(self, timeout=10):
         while self.connected:
-            time.sleep(0.01) # 100 hz
             self.read(timeout)
     
     def stop_pumping(self):
