@@ -3,7 +3,13 @@ FROM ubuntu:focal
 
 # dependencies
 RUN apt-get -y update
-RUN apt-get -y install curl git python3 python3-pip python3-dev python3-venv git
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    python3 \
+    python3-pip \
+    python3-venv \
+    && rm -rf /var/lib/apt/lists/*
 
 # install poetry
 RUN curl -sSL https://install.python-poetry.org | python3 -
