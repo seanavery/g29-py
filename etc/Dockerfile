@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # install poetry
-RUN curl -sSL https://install.python-poetry.org | python3 -
+RUN pip install --user pipx && python3 -m pipx install poetry
+
 # add $HOME/.local/bin to path
 ENV PATH "$PATH:/root/.local/bin"
 RUN poetry --version
