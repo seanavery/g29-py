@@ -7,6 +7,7 @@ from .params import *
 class G29:
     connected = False
     cache = None
+    state_lock = threading.Lock()
     state = {
         "steering": 0.0,
         "accelerator": -1.0,
@@ -225,34 +226,36 @@ class G29:
     def get_state(self):
         if not self.connected:
             raise Exception("G29 not connected")
-        return self.state
+        with self.state_lock:
+            return self.state.copy()
 
     def update_state(self, byte_array):
-        if self.cache is None:
-            log.warn("cache not available")
-            return
+        with self.state_lock:
+            if self.cache is None:
+                log.warn("cache not available")
+                return
 
-        # update only diffs
-        if byte_array[GAME_PAD] != self.cache[GAME_PAD]:
-            self.update_gamepad(byte_array[GAME_PAD])
-        if byte_array[BUTTON_MISC] != self.cache[BUTTON_MISC]:
-            self.update_misc(byte_array[BUTTON_MISC])
-        if byte_array[BUTTON_PLUS] != self.cache[BUTTON_PLUS]:
-            if byte_array[BUTTON_PLUS] == BUTTON_PLUS_ON:
-                self.state["buttons"]["+"] = 1
-            else:
-                self.state["buttons"]["+"] = 0
-        if byte_array[BUTTON_MISC2] != self.cache[BUTTON_MISC2]:
-            self.update_misc2(byte_array[BUTTON_MISC2])
-        if byte_array[STEERING_COARSE] != self.cache[STEERING_COARSE] or byte_array[STEERING_FINE] != self.cache[STEERING_FINE]:
-            steering_val = self.calc_steering(byte_array[STEERING_FINE], byte_array[STEERING_COARSE])
-            self.state["steering"] = steering_val
-        if byte_array[PEDAL_ACCELERATOR] != self.cache[PEDAL_ACCELERATOR]:
-            self.state["accelerator"] = self.calc_pedal(byte_array[PEDAL_ACCELERATOR])
-        if byte_array[PEDAL_BRAKE] != self.cache[PEDAL_BRAKE]:
-            self.state["brake"] = self.calc_pedal(byte_array[7])
-        if byte_array[PEDAL_CLUTCH] != self.cache[PEDAL_CLUTCH]:
-            self.state["clutch"] = self.calc_pedal(byte_array[8])
+            # update only diffs
+            if byte_array[GAME_PAD] != self.cache[GAME_PAD]:
+                self.update_gamepad(byte_array[GAME_PAD])
+            if byte_array[BUTTON_MISC] != self.cache[BUTTON_MISC]:
+                self.update_misc(byte_array[BUTTON_MISC])
+            if byte_array[BUTTON_PLUS] != self.cache[BUTTON_PLUS]:
+                if byte_array[BUTTON_PLUS] == BUTTON_PLUS_ON:
+                    self.state["buttons"]["+"] = 1
+                else:
+                    self.state["buttons"]["+"] = 0
+            if byte_array[BUTTON_MISC2] != self.cache[BUTTON_MISC2]:
+                self.update_misc2(byte_array[BUTTON_MISC2])
+            if byte_array[STEERING_COARSE] != self.cache[STEERING_COARSE] or byte_array[STEERING_FINE] != self.cache[STEERING_FINE]:
+                steering_val = self.calc_steering(byte_array[STEERING_FINE], byte_array[STEERING_COARSE])
+                self.state["steering"] = steering_val
+            if byte_array[PEDAL_ACCELERATOR] != self.cache[PEDAL_ACCELERATOR]:
+                self.state["accelerator"] = self.calc_pedal(byte_array[PEDAL_ACCELERATOR])
+            if byte_array[PEDAL_BRAKE] != self.cache[PEDAL_BRAKE]:
+                self.state["brake"] = self.calc_pedal(byte_array[7])
+            if byte_array[PEDAL_CLUTCH] != self.cache[PEDAL_CLUTCH]:
+                self.state["clutch"] = self.calc_pedal(byte_array[8])
 
     def calc_steering(self, coarse, fine):
         # coarse 0-255
