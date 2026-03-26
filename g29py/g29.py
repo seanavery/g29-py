@@ -202,7 +202,6 @@ class G29:
         except Exception as e:
             print(f"G29 disconneted: {e}")
             self.connected = False
-            self.stop_pumping()
             return
 
         # only handle 12 byte msgs
