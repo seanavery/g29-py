@@ -1,6 +1,7 @@
 import hid
 import time
 import threading
+import copy
 import logging as log
 from .params import *
 
@@ -227,7 +228,7 @@ class G29:
         if not self.connected:
             raise Exception("G29 not connected")
         with self.state_lock:
-            return self.state.copy()
+            return copy.deepcopy(self.state)
 
     def update_state(self, byte_array):
         with self.state_lock:
