@@ -221,8 +221,13 @@ class G29:
             self.read(timeout)
 
     def stop_pumping(self):
-        if self.pump_thread is not None:
-            self.pump_thread.join()
+        if self.pump_thread is None:
+            return
+        if not self.pump_thread.is_alive():
+            self.pump_thread = None
+            return
+        self.pump_thread.join()
+        self.pump_thread = None
 
     def get_state(self):
         if not self.connected:
