@@ -5,46 +5,46 @@ import logging as log
 from .params import *
 
 class G29:
-    connected = False
-    cache = None
-    state_lock = threading.Lock()
-    state = {
-        "steering": 0.0,
-        "accelerator": -1.0,
-        "clutch": -1.0,
-        "brake": -1.0,
-        "buttons": {
-            "gamepad": {
-                "up": 0,
-                "down": 0,
-                "left": 0,
-                "right": 0,
-                "X": 0,
-                "O": 0,
-                "S": 0,
-                "T": 0
-            },
-            "misc": {
-                "R2": 0,
-                "R3": 0,
-                "L2": 0,
-                "L3": 0,
-                "Share": 0,
-                "Options": 0,
-            },
-            "+": 0,
-            "misc2": {
-                "-": 0,
-                "track": 0,
-                "dial": DIAL_CENTER, # -100 to 100
-                "PS": 0,
-            },
-        }
-    }
-    dial_val = DIAL_CENTER
-
     # Add dial
     def __init__(self):
+        self.connected = False
+        self.cache = None
+        self.state_lock = threading.Lock()
+        self.state = {
+            "steering": 0.0,
+            "accelerator": -1.0,
+            "clutch": -1.0,
+            "brake": -1.0,
+            "buttons": {
+                "gamepad": {
+                    "up": 0,
+                    "down": 0,
+                    "left": 0,
+                    "right": 0,
+                    "X": 0,
+                    "O": 0,
+                    "S": 0,
+                    "T": 0
+                },
+                "misc": {
+                    "R2": 0,
+                    "R3": 0,
+                    "L2": 0,
+                    "L3": 0,
+                    "Share": 0,
+                    "Options": 0,
+                },
+                "+": 0,
+                "misc2": {
+                    "-": 0,
+                    "track": 0,
+                    "dial": DIAL_CENTER, # -100 to 100
+                    "PS": 0,
+                },
+            }
+        }
+        self.dial_val = DIAL_CENTER
+        self.pump_thread = None
         try:
             device = hid.Device(VENDOR_ID, PRODUCT_ID)
         except:
