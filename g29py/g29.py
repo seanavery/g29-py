@@ -50,8 +50,8 @@ class G29:
             device = hid.Device(VENDOR_ID, PRODUCT_ID)
         except:
             raise Exception("Device not found. Is it plugged in?")
-        log.debug(f'Device manufacturer: {device.manufacturer}')
-        log.debug(f'Product: {device.product}')
+        log.debug("Device manufacturer: %s", device.manufacturer)
+        log.debug("Product: %s", device.product)
         self.device = device
         self.connected = True
 
@@ -77,7 +77,7 @@ class G29:
             raise ValueError("force_constant val must be between 0 and 1")
         # normalze to 0-255
         val = round(int(val * 255))
-        log.debug(f'force_constant: {val}')
+        log.debug("force_constant: %s", val)
         msg = [0x11, 0x00, val, 0x00, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
@@ -94,7 +94,7 @@ class G29:
             raise ValueError("force_fricion val must be between 0 and 1")
         # normalze to 0-8
         val = round(int(val * 8))
-        log.debug(f'force_friction: {val}')
+        log.debug("force_friction: %s", val)
         msg = [0x21, 0x02, val, 0x00, val, 0x00, 0x00]
         self.device.write(bytes(msg))
 
@@ -111,7 +111,7 @@ class G29:
             raise ValueError("set_range val must be between 400 and 900")
         range1 = val & 0x00ff
         range2 = (val & 0xff00) >> 8
-        log.debug(f'range: {range1},{range2}')
+        log.debug("range: %s,%s", range1, range2)
         msg = [0xf8, 0x81, range1, range2, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
@@ -137,7 +137,7 @@ class G29:
         strength = round(int(strength * 15))
         # normalze rate to 0-255
         rate = round(int(rate * 255))
-        log.debug(f'autocenter: {strength} {rate}')
+        log.debug("autocenter: %s %s", strength, rate)
         msg = [0xfe, 0x0d, strength, strength, rate, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
@@ -169,7 +169,14 @@ class G29:
         strength = round(int(strength * 15))
         # normalze force to 0-255
         force = round(int(force * 255))
-        log.debug(f'anticenter: {angle1} {angle2} {strength} {reverse} {force}')
+        log.debug(
+            "anticenter: %s %s %s %s %s",
+            angle1,
+            angle2,
+            strength,
+            reverse,
+            force,
+        )
         msg = [0x11, 0x03, 0x00, 0x00, 0x00, 0x00, force]
         self.device.write(bytes(msg))
 
@@ -190,7 +197,7 @@ class G29:
         """
         if slot < 0 or slot > 4 and slot !=0xf3:
             raise ValueError("force_off slot must be between 0 and 4 or 0xf3")
-        log.debug(f'force_off: {slot}')
+        log.debug("force_off: %s", slot)
         msg = [slot, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         self.device.write(bytes(msg))
 
@@ -320,7 +327,7 @@ class G29:
         elif val == GAME_PAD_TRIANGLE:
             state["buttons"]["gamepad"]["T"] = 1
         else:
-            log.debug(f"unknown gamepad value: {val}")
+            log.debug("unknown gamepad value: %s", val)
 
     def apply_misc(self, state, val):
         if val == MISC_NIL:
@@ -338,7 +345,7 @@ class G29:
         elif val == MISC_OPTIONS:
             state["buttons"]["misc"]["Options"] = 1
         else:
-            log.debug(f"unknown misc value: {val}")
+            log.debug("unknown misc value: %s", val)
 
     def apply_plus(self, state, val):
         if val == BUTTON_PLUS_ON:
@@ -346,7 +353,7 @@ class G29:
         elif val == BUTTON_PLUS_NIL:
             state["buttons"]["+"] = 0
         else:
-            log.debug(f"unknown plus value: {val}")
+            log.debug("unknown plus value: %s", val)
 
     def apply_misc2(self, state, val):
         if val == MISC2_NIL:
@@ -362,7 +369,7 @@ class G29:
         elif val == MISC_PSTATION:
             state["buttons"]["misc2"]["PS"] = 1
         else:
-            log.debug(f"unknown misc2 value: {val}")
+            log.debug("unknown misc2 value: %s", val)
 
     def update_dial(self, val):
         pos = self.dial_val + val
