@@ -48,8 +48,8 @@ class G29:
         self.pump_thread = None
         try:
             device = hid.Device(VENDOR_ID, PRODUCT_ID)
-        except:
-            raise Exception("Device not found. Is it plugged in?")
+        except Exception as exc:
+            raise Exception("Device not found. Is it plugged in?") from exc
         log.debug("Device manufacturer: %s", device.manufacturer)
         log.debug("Product: %s", device.product)
         self.device = device
