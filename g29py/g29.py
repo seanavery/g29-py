@@ -238,31 +238,51 @@ class G29:
 
     def update_state(self, byte_array):
         with self.state_lock:
-            if self.cache is None:
-                log.warn("cache not available")
-                return
+            self.state = self.decode_packet(byte_array)
 
-            # update only diffs
-            if byte_array[GAME_PAD] != self.cache[GAME_PAD]:
-                self.update_gamepad(byte_array[GAME_PAD])
-            if byte_array[BUTTON_MISC] != self.cache[BUTTON_MISC]:
-                self.update_misc(byte_array[BUTTON_MISC])
-            if byte_array[BUTTON_PLUS] != self.cache[BUTTON_PLUS]:
-                if byte_array[BUTTON_PLUS] == BUTTON_PLUS_ON:
-                    self.state["buttons"]["+"] = 1
-                else:
-                    self.state["buttons"]["+"] = 0
-            if byte_array[BUTTON_MISC2] != self.cache[BUTTON_MISC2]:
-                self.update_misc2(byte_array[BUTTON_MISC2])
-            if byte_array[STEERING_COARSE] != self.cache[STEERING_COARSE] or byte_array[STEERING_FINE] != self.cache[STEERING_FINE]:
-                steering_val = self.calc_steering(byte_array[STEERING_FINE], byte_array[STEERING_COARSE])
-                self.state["steering"] = steering_val
-            if byte_array[PEDAL_ACCELERATOR] != self.cache[PEDAL_ACCELERATOR]:
-                self.state["accelerator"] = self.calc_pedal(byte_array[PEDAL_ACCELERATOR])
-            if byte_array[PEDAL_BRAKE] != self.cache[PEDAL_BRAKE]:
-                self.state["brake"] = self.calc_pedal(byte_array[7])
-            if byte_array[PEDAL_CLUTCH] != self.cache[PEDAL_CLUTCH]:
-                self.state["clutch"] = self.calc_pedal(byte_array[8])
+    def decode_packet(self, byte_array):
+        state = {
+            "steering": self.calc_steering(
+                byte_array[STEERING_FINE],
+                byte_array[STEERING_COARSE],
+            ),
+            "accelerator": self.calc_pedal(byte_array[PEDAL_ACCELERATOR]),
+            "clutch": self.calc_pedal(byte_array[PEDAL_CLUTCH]),
+            "brake": self.calc_pedal(byte_array[PEDAL_BRAKE]),
+            "buttons": {
+                "gamepad": {
+                    "up": 0,
+                    "down": 0,
+                    "left": 0,
+                    "right": 0,
+                    "X": 0,
+                    "O": 0,
+                    "S": 0,
+                    "T": 0,
+                },
+                "misc": {
+                    "R2": 0,
+                    "R3": 0,
+                    "L2": 0,
+                    "L3": 0,
+                    "Share": 0,
+                    "Options": 0,
+                },
+                "+": 0,
+                "misc2": {
+                    "-": 0,
+                    "track": 0,
+                    "dial": self.dial_val,
+                    "PS": 0,
+                    "back": 0,
+                },
+            },
+        }
+        self.apply_gamepad(state, byte_array[GAME_PAD])
+        self.apply_misc(state, byte_array[BUTTON_MISC])
+        self.apply_plus(state, byte_array[BUTTON_PLUS])
+        self.apply_misc2(state, byte_array[BUTTON_MISC2])
+        return state
 
     def calc_steering(self, coarse, fine):
         # coarse 0-255
@@ -280,63 +300,69 @@ class G29:
         # scale to -1 to 1
         return normalized * 2 - 1
 
-    def update_gamepad(self, val):
+    def apply_gamepad(self, state, val):
         if val == GAME_PAD_NIL:
-            print("reseting gamepad")
-            for k in self.state["buttons"]["gamepad"]:
-                self.state["buttons"]["gamepad"][k] = 0
-        if val == GAME_PAD_UP:
-            self.state["buttons"]["gamepad"]["up"] = 1
-        if val == GAME_PAD_DOWN:
-            self.state["buttons"]["gamepad"]["down"] = 1
-        if val == GAME_PAD_RIGHT:
-            self.state["buttons"]["gamepad"]["right"] = 1
-        if val == GAME_PAD_LEFT:
-            self.state["buttons"]["gamepad"]["left"] = 1
-        if val == GAME_PAD_X:
-            print("X")
-            self.state["buttons"]["gamepad"]["X"] = 1
-        if val == GAME_PAD_SQUARE:
-            self.state["buttons"]["gamepad"]["S"] = 1
-        if val == GAME_PAD_CIRCLE:
-            self.state["buttons"]["gamepad"]["O"] = 1
-        if val == GAME_PAD_TRIANGLE:
-            self.state["buttons"]["gamepad"]["T"] = 1
+            return
+        elif val == GAME_PAD_UP:
+            state["buttons"]["gamepad"]["up"] = 1
+        elif val == GAME_PAD_DOWN:
+            state["buttons"]["gamepad"]["down"] = 1
+        elif val == GAME_PAD_RIGHT:
+            state["buttons"]["gamepad"]["right"] = 1
+        elif val == GAME_PAD_LEFT:
+            state["buttons"]["gamepad"]["left"] = 1
+        elif val == GAME_PAD_X:
+            state["buttons"]["gamepad"]["X"] = 1
+        elif val == GAME_PAD_SQUARE:
+            state["buttons"]["gamepad"]["S"] = 1
+        elif val == GAME_PAD_CIRCLE:
+            state["buttons"]["gamepad"]["O"] = 1
+        elif val == GAME_PAD_TRIANGLE:
+            state["buttons"]["gamepad"]["T"] = 1
+        else:
+            log.debug(f"unknown gamepad value: {val}")
 
-    def update_misc(self, val):
+    def apply_misc(self, state, val):
         if val == MISC_NIL:
-            for k in self.state["buttons"]["misc"]:
-                self.state["buttons"]["misc"][k] = 0
-        if val == MISC_R2:
-            self.state["buttons"]["misc"]["R2"] = 1
-        if val == MISC_R3:
-            self.state["buttons"]["misc"]["R3"] = 1
-        if val == MISC_L2:
-            self.state["buttons"]["misc"]["L2"] = 1
-        if val == MISC_L3:
-            self.state["buttons"]["misc"]["L3"] = 1
-        if val == MISC_SHARE:
-            self.state["buttons"]["misc"]["Share"] = 1
-        if val == MISC_OPTIONS:
-            self.state["buttons"]["misc"]["Options"] = 1
+            return
+        elif val == MISC_R2:
+            state["buttons"]["misc"]["R2"] = 1
+        elif val == MISC_R3:
+            state["buttons"]["misc"]["R3"] = 1
+        elif val == MISC_L2:
+            state["buttons"]["misc"]["L2"] = 1
+        elif val == MISC_L3:
+            state["buttons"]["misc"]["L3"] = 1
+        elif val == MISC_SHARE:
+            state["buttons"]["misc"]["Share"] = 1
+        elif val == MISC_OPTIONS:
+            state["buttons"]["misc"]["Options"] = 1
+        else:
+            log.debug(f"unknown misc value: {val}")
 
-    def update_misc2(self, val):
-        # handle nil case
+    def apply_plus(self, state, val):
+        if val == BUTTON_PLUS_ON:
+            state["buttons"]["+"] = 1
+        elif val == BUTTON_PLUS_NIL:
+            state["buttons"]["+"] = 0
+        else:
+            log.debug(f"unknown plus value: {val}")
+
+    def apply_misc2(self, state, val):
         if val == MISC2_NIL:
-            for k in self.state["buttons"]["misc2"]:
-                if k != "dial":
-                    self.state["buttons"]["misc2"][k] = 0
-        if val == MISC2_MINUS:
-            self.state["buttons"]["misc2"]["-"] = 1
-        if val == MISC2_TRACK_RIGHT:
-            self.state["buttons"]["misc2"]["dial"] = self.update_dial(1)
-        if val == MISC2_TRACK_LEFT:
-            self.state["buttons"]["misc2"]["dial"] = self.update_dial(-1)
-        if val == MISC2_BACK:
-            self.state["buttons"]["misc2"]["back"] = 1
-        if val == MISC_PSTATION:
-            print("ps")
-            self.state["buttons"]["misc2"]["PS"] = 1
+            return
+        elif val == MISC2_MINUS:
+            state["buttons"]["misc2"]["-"] = 1
+        elif val == MISC2_TRACK_RIGHT:
+            state["buttons"]["misc2"]["dial"] = self.update_dial(1)
+        elif val == MISC2_TRACK_LEFT:
+            state["buttons"]["misc2"]["dial"] = self.update_dial(-1)
+        elif val == MISC2_BACK:
+            state["buttons"]["misc2"]["back"] = 1
+        elif val == MISC_PSTATION:
+            state["buttons"]["misc2"]["PS"] = 1
+        else:
+            log.debug(f"unknown misc2 value: {val}")
 
     def update_dial(self, val):
         pos = self.dial_val + val
