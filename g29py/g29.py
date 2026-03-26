@@ -200,7 +200,7 @@ class G29:
         try:
             dat = self.device.read(16, timeout)
         except Exception as e:
-            print(f"G29 disconneted: {e}")
+            log.error("G29 disconnected: %s", e)
             self.connected = False
             return
 
