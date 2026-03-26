@@ -212,6 +212,8 @@ class G29:
         return dat
 
     def listen(self, timeout=10):
+        if self.pump_thread is not None and self.pump_thread.is_alive():
+            return
         self.pump_thread = threading.Thread(target=self.pump, args=(timeout,))
         self.pump_thread.start()
 
