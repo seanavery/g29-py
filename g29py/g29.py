@@ -207,7 +207,7 @@ class G29:
         try:
             dat = self.device.read(16, timeout)
         except Exception as e:
-            log.error("G29 disconnected: %s", e)
+            log.warning("G29 read failed; stopping listener: %s", e)
             self.connected = False
             return
 
