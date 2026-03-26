@@ -243,8 +243,8 @@ class G29:
     def decode_packet(self, byte_array):
         state = {
             "steering": self.calc_steering(
-                byte_array[STEERING_FINE],
                 byte_array[STEERING_COARSE],
+                byte_array[STEERING_FINE],
             ),
             "accelerator": self.calc_pedal(byte_array[PEDAL_ACCELERATOR]),
             "clutch": self.calc_pedal(byte_array[PEDAL_CLUTCH]),
@@ -284,10 +284,10 @@ class G29:
         self.apply_misc2(state, byte_array[BUTTON_MISC2])
         return state
 
-    def calc_steering(self, coarse, fine):
+    def calc_steering(self, coarse_byte, fine_byte):
         # coarse 0-255
         # fine 0-255
-        steering_raw = (coarse << 8) | fine  # 0-65535 for 16 bit integer
+        steering_raw = (coarse_byte << 8) | fine_byte  # 0-65535 for 16 bit integer
         # scale to -1 to 1
         steering_normalized = (steering_raw / 65535.0) * 2 - 1
 
